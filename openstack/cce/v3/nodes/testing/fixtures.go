@@ -1,5 +1,7 @@
 package testing
 
+import "github.com/huaweicloud/golangsdk/openstack/cce/v3/nodes"
+
 const Output = `{
     "kind": "Host",
     "apiVersion": "v3",
@@ -25,8 +27,7 @@ const Output = `{
 }
 }`
 
-/*
-var Expected = &nodes.Node{
+var Expected = &nodes.Nodes{
 	Kind:       "Host",
 	Apiversion: "v3",
 	Metadata:   nodes.Metadata{Name: "c2c-hostname"},
@@ -48,5 +49,3 @@ var Expected = &nodes.Node{
 		},
 	},
 }
-
-*/
