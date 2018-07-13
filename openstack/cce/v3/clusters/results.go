@@ -87,7 +87,7 @@ type Status struct {
 	//The status of each component in the cluster
 	Conditions Conditions `json:"conditions"`
 	//Kube-apiserver access address in the cluster
-	Endpoints Endpoints `json:"endpoints"`
+	Endpoints []Endpoints `json:"endpoints"`
 }
 
 type Conditions struct {
@@ -101,9 +101,9 @@ type Conditions struct {
 
 type Endpoints struct {
 	//The address accessed within the user's subnet
-	Internal string `json:"internal"`
+	Url string `json:"url"`
 	//Public network access address
-	External string `json:"external"`
+	Type string `json:"type"`
 }
 
 // Extract is a function that accepts a result and extracts a cluster.
