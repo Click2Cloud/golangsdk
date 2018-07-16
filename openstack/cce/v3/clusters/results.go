@@ -55,7 +55,7 @@ type Spec struct {
 	// Charging mode of the cluster, which is 0 (on demand)
 	BillingMode int `json:"billingMode ,omitempty"`
 	//Extended parameter for a cluster
-	ExtendParam map[string]string `json:"extendParam ,omitempty"`
+	ExtendParam map[string]string `json:"extendParam,omitempty"`
 }
 
 // Node network parameters
@@ -66,7 +66,7 @@ type HostNetworkSpec struct {
 	SubnetId string `json:"subnet" required:"true"`
 	// The ID of the high speed network used to create bare metal nodes.
 	// This parameter is required when creating a bare metal cluster.
-	HighwaySubnet string `json:"highwaySubnet ,omitempty"`
+	HighwaySubnet string `json:"highwaySubnet,omitempty"`
 }
 
 //Container network parameters
@@ -74,7 +74,7 @@ type ContainerNetworkSpec struct {
 	//Container network type: overlay_l2 , underlay_ipvlan or vpc-router
 	Mode string `json:"mode" required:"true"`
 	//Container network segment: 172.16.0.0/16 ~ 172.31.0.0/16. If there is a network segment conflict, it will be automatically reselected.
-	Cidr string `json:"cidr ,omitempty"`
+	Cidr string `json:"cidr,omitempty"`
 }
 
 type Status struct {
