@@ -1,8 +1,9 @@
 package clusters
 
 import (
-	"github.com/huaweicloud/golangsdk"
 	"reflect"
+
+	"github.com/huaweicloud/golangsdk"
 )
 
 var RequestOpts golangsdk.RequestOpts = golangsdk.RequestOpts{
@@ -146,6 +147,7 @@ func Get(c *golangsdk.ServiceClient, id string) (r GetResult) {
 type UpdateOpts struct {
 	Spec UpdateSpec `json:"spec" required:"true"`
 }
+
 type UpdateSpec struct {
 	//Cluster description
 	Description string `json:"description,omitempty"`

@@ -53,7 +53,7 @@ type Spec struct {
 	//Container network parameters
 	ContainerNetwork ContainerNetworkSpec `json:"containerNetwork" required:"true"`
 	// Charging mode of the cluster, which is 0 (on demand)
-	BillingMode int `json:"billingMode ,omitempty"`
+	BillingMode int `json:"billingMode,omitempty"`
 	//Extended parameter for a cluster
 	ExtendParam map[string]string `json:"extendParam,omitempty"`
 }
@@ -106,6 +106,10 @@ type Endpoints struct {
 	Type string `json:"type"`
 }
 
+type commonResult struct {
+	golangsdk.Result
+}
+
 // Extract is a function that accepts a result and extracts a cluster.
 func (r commonResult) Extract() (*Clusters, error) {
 	var s Clusters
@@ -122,10 +126,6 @@ func (r commonResult) ExtractCluster(opts ListOpts) ([]Clusters, error) {
 		return nil, err
 	}
 	return FilterClusters(s.Clusters, opts)
-}
-
-type commonResult struct {
-	golangsdk.Result
 }
 
 // CreateResult represents the result of a create operation. Call its Extract
@@ -152,7 +152,7 @@ type DeleteResult struct {
 	golangsdk.ErrResult
 }
 
-// ListResult represents the result of a list operation. Call its Extract
+// ListResult represents the result of a list operation. Call its ExtractCluster
 // method to interpret it as a Cluster.
 type ListResult struct {
 	commonResult

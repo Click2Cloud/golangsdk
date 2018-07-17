@@ -27,9 +27,12 @@ const Output = `
     },
     "status": {
         "phase": "Available",
-        "endpoints": {
-            "internal": "https://192.168.0.201:5443"
-        }
+        "endpoints": [
+                    {
+                        "url": "https://192.168.0.68:5443",
+                        "type": "Internal"
+                    }
+                ]
     }
 }`
 
@@ -55,8 +58,8 @@ var Expected = &clusters.Clusters{
 	},
 	Status: clusters.Status{
 		Phase: "Available",
-		Endpoints: clusters.Endpoints{
-			Internal: "https://192.168.0.201:5443",
+		Endpoints: []clusters.Endpoints{
+			{Url: "https://192.168.0.68:5443", Type: "Internal"},
 		},
 	},
 }
@@ -86,9 +89,12 @@ const ListOutput = `
             },
             "status": {
                 "phase": "Available",
-                "endpoints": {
-		   "internal":"https://192.168.0.201:5443"
-					}
+                "endpoints": [
+                    {
+                        "url": "https://192.168.0.68:5443",
+                        "type": "Internal"
+                    }
+                ]
             }
         }
     ]
@@ -107,6 +113,6 @@ var ListExpected = []clusters.Clusters{
 			BillingMode:      0,
 			Version:          "v1.7.3-r10",
 		},
-		Status: clusters.Status{Phase: "Available", Endpoints: clusters.Endpoints{Internal: "https://192.168.0.201:5443"}},
+		Status: clusters.Status{Phase: "Available", Endpoints: []clusters.Endpoints{{Url: "https://192.168.0.68:5443", Type: "Internal"}}},
 	},
 }

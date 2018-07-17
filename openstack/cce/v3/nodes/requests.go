@@ -6,6 +6,7 @@ import (
 	"github.com/huaweicloud/golangsdk"
 )
 
+// ListOpts allows the filtering of list data using given parameters.
 type ListOpts struct {
 	Name  string `json:"name"`
 	Uid   string `json:"uid"`
@@ -16,12 +17,7 @@ var RequestOpts golangsdk.RequestOpts = golangsdk.RequestOpts{
 	MoreHeaders: map[string]string{"Content-Type": "application/json"},
 }
 
-// List returns collection of
-// nodes. It accepts a ListOpts struct, which allows you to filter and sort
-// the returned collection for greater efficiency.
-//
-// Default policy settings return only those nodes that in the cluster and are owned by the
-// tenant who submits the request, unless an admin user submits the request.
+// List returns collection of nodes.
 func List(client *golangsdk.ServiceClient, clusterID string) (r ListResult) {
 	_, r.Err = client.Get(rootURL(client, clusterID), &r.Body, &golangsdk.RequestOpts{
 		OkCodes:     []int{200},
@@ -30,7 +26,6 @@ func List(client *golangsdk.ServiceClient, clusterID string) (r ListResult) {
 	return r
 }
 
-//Filters the node based on below paramaters
 func FilterNodes(nodes []Nodes, opts ListOpts) ([]Nodes, error) {
 
 	var refinedNodes []Nodes
@@ -78,8 +73,6 @@ func GetStructNestedField(v *Nodes, field string, structDriller []string) string
 	return string(f1.String())
 }
 
-//Defined structure is used in GetStructNestedField, since the filter is based on
-// different key value pairs.
 type FilterMetadata struct {
 	Value   string
 	Driller []string
@@ -92,13 +85,13 @@ type CreateOpts struct {
 	Kind string `json:"kind" required:"true"`
 	//API version, fixed value v3
 	ApiVersion string `json:"apiversion" required:"true"`
-	//Medata required to create a Node
+	//Metadata required to create a Node
 	Metadata CreateMetaData `json:"metadata"`
 	//specifications to create a Node
 	Spec Spec `json:"spec" required:"true"`
 }
 
-//Medata required to create a Node
+// Metadata required to create a Node
 type CreateMetaData struct {
 	//Node name
 	Name string `json:"name,omitempty"`
@@ -115,10 +108,13 @@ type CreateOptsBuilder interface {
 	ToNodeCreateMap() (map[string]interface{}, error)
 }
 
+// ToNodeCreateMap builds a create request body from CreateOpts.
 func (opts CreateOpts) ToNodeCreateMap() (map[string]interface{}, error) {
 	return golangsdk.BuildRequestBody(opts, "")
 }
 
+// Create accepts a CreateOpts struct and uses the values to create a new
+// logical node.
 func Create(c *golangsdk.ServiceClient, clusterid string, opts CreateOptsBuilder) (r CreateResult) {
 	b, err := opts.ToNodeCreateMap()
 	if err != nil {
@@ -144,9 +140,12 @@ func Get(c *golangsdk.ServiceClient, clusterid, nodeid string) (r GetResult) {
 type UpdateOptsBuilder interface {
 	ToNodeUpdateMap() (map[string]interface{}, error)
 }
+
+// UpdateOpts contains all the values needed to update a new node
 type UpdateOpts struct {
 	Metadata UpdateMetadata `json:"metadata,omitempty"`
 }
+
 type UpdateMetadata struct {
 	Name string `json:"name,omitempty"`
 }
@@ -169,6 +168,7 @@ func Update(c *golangsdk.ServiceClient, clusterid, nodeid string, opts UpdateOpt
 	return
 }
 
+// Delete will permanently delete a particular node based on its unique ID and cluster ID.
 func Delete(c *golangsdk.ServiceClient, clusterid, nodeid string) (r DeleteResult) {
 	_, r.Err = c.Delete(resourceURL(c, clusterid, nodeid), &golangsdk.RequestOpts{
 		OkCodes:     []int{200},
