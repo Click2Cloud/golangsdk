@@ -119,6 +119,50 @@ func (r commonResult) ExtractNode(opts ListOpts) ([]Nodes, error) {
 	return FilterNodes(s.Nodes, opts)
 }
 
+func (r commonResult) ExtractJob() (*Job, error) {
+	var s Job
+	err := r.ExtractInto(&s)
+	return &s, err
+}
+
+type Job struct {
+	Kind       string      `json:"kind"`
+	Apiversion string      `json:"apiVersion"`
+	Metadata   JobMetadata `json:"metadata"`
+	Spec       JobSpec     `json:"spec"`
+}
+
+type JobStatus struct {
+	Phase string `json:"phase"`
+}
+type JobMetadata struct {
+	Uid string `json:"uid"`
+}
+
+type JobSpec struct {
+	Type         string    `json:"type"`
+	ClusterUID   string    `json:"clusterUID"`
+	ResourceName string    `json:"resourceName"`
+	SubJobs      []SubJobs `json:"subJobs"`
+}
+type SubJobs struct {
+	Spec SpecJobCluster `json:"spec"`
+}
+
+type SpecJobCluster struct {
+	SubJobsCluster []SubJobsCluster `json:"subJobs"`
+}
+
+type SubJobsCluster struct {
+	SpecJobNode SpecJobNode `json:"spec"`
+}
+
+type SpecJobNode struct {
+	Type       string `json:"type"`
+	ClusterUID string `json:"clusterUID"`
+	ResourceID string `json:"resourceID"`
+}
+
 // ListResult represents the result of a list operation. Call its ExtractNode
 // method to interpret it as a Nodes.
 type ListResult struct {

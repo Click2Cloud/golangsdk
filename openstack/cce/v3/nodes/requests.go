@@ -176,3 +176,11 @@ func Delete(c *golangsdk.ServiceClient, clusterid, nodeid string) (r DeleteResul
 	})
 	return
 }
+
+func GetJobDetails(c *golangsdk.ServiceClient, jobid string) (r GetResult) {
+	_, r.Err = c.Get(getJobURL(c, jobid), &r.Body, &golangsdk.RequestOpts{
+		OkCodes:     []int{200},
+		MoreHeaders: RequestOpts.MoreHeaders, JSONBody: nil,
+	})
+	return
+}
