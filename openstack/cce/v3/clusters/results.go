@@ -4,7 +4,7 @@ import (
 	"github.com/huaweicloud/golangsdk"
 )
 
-type ListClusterResponse struct {
+type ListCluster struct {
 	// API type, fixed value Cluster
 	Kind string `json:"kind"`
 	//API version, fixed value v3
@@ -120,7 +120,7 @@ func (r commonResult) Extract() (*Clusters, error) {
 // ExtractCluster is a function that accepts a ListOpts struct, which allows you to filter and sort
 // the returned collection for greater efficiency.
 func (r commonResult) ExtractCluster(opts ListOpts) ([]Clusters, error) {
-	var s ListClusterResponse
+	var s ListCluster
 	err := r.ExtractInto(&s)
 	if err != nil {
 		return nil, err
