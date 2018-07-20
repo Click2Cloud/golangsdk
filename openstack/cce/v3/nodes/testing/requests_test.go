@@ -69,7 +69,7 @@ func TestListNode(t *testing.T) {
 	})
 
 	listNodes := nodes.ListOpts{Name: "test-node-1234"}
-	actual, err := nodes.List(fake.ServiceClient(), "cec124c2-58f1-11e8-ad73-0255ac101926").ExtractNode(listNodes)
+	actual, err := nodes.List(fake.ServiceClient(), "cec124c2-58f1-11e8-ad73-0255ac101926", listNodes)
 
 	if err != nil {
 		t.Errorf("Failed to extract nodes: %v", err)
