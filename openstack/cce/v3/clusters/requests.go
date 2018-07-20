@@ -98,21 +98,21 @@ type CreateOptsBuilder interface {
 type CreateOpts struct {
 	// API type, fixed value Cluster
 	Kind string `json:"kind" required:"true"`
-	//API version, fixed value v3
+	// API version, fixed value v3
 	ApiVersion string `json:"apiversion" required:"true"`
-	//Medata required to create a cluster
+	// Metadata required to create a cluster
 	Metadata CreateMetaData `json:"metadata" required:"true"`
-	//specifications to create a cluster
+	// specifications to create a cluster
 	Spec Spec `json:"spec" required:"true"`
 }
 
-//Medata required to create a cluster
+// Metadata required to create a cluster
 type CreateMetaData struct {
-	//Cluster unique name
+	// Cluster unique name
 	Name string `json:"name" required:"true"`
 	// Cluster tag, key/value pair format
 	Labels map[string]string `json:"labels,omitempty"`
-	//Cluster annotation, key/value pair format
+	// Cluster annotation, key/value pair format
 	Annotations map[string]string `json:"annotations,omitempty"`
 }
 
@@ -149,7 +149,7 @@ type UpdateOpts struct {
 }
 
 type UpdateSpec struct {
-	//Cluster description
+	// Cluster description
 	Description string `json:"description,omitempty"`
 }
 

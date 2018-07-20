@@ -6,17 +6,25 @@ import (
 
 //Describes the Node Structure of cluster
 type ListNodeResponse struct {
+	// API type, fixed value "List"
 	Kind       string  `json:"kind"`
+	// API version, fixed value "v3"
 	Apiversion string  `json:"apiVersion"`
+	// all Clusters
 	Nodes      []Nodes `json:"items"`
 }
 
-//Individual nodes of the cluster
+// Individual nodes of the cluster
 type Nodes struct {
+	//  API type, fixed value " Host "
 	Kind       string   `json:"kind"`
+	// API version, fixed value v3
 	Apiversion string   `json:"apiVersion"`
+	// Node metadata
 	Metadata   Metadata `json:"metadata"`
+	// Node detailed parameters
 	Spec       Spec     `json:"spec"`
+	// Node status information
 	Status     Status   `json:"status"`
 }
 
@@ -34,51 +42,73 @@ type Metadata struct {
 
 // Describes Nodes specification
 type Spec struct {
+	// Node specifications
 	Flavor      string       `json:"flavor" required:"true"`
+	// The value of the available partition name
 	Az          string       `json:"az" required:"true"`
+	// Node login parameters
 	Login       LoginSpec    `json:"login" required:"true"`
+	// System disk parameter of the node
 	RootVolume  VolumeSpec   `json:"rootVolume" required:"true"`
+	// The data disk parameter of the node must currently be a disk
 	DataVolumes []VolumeSpec `json:"dataVolumes" required:"true"`
+	// Elastic IP parameters of the node
 	PublicIP    PublicIPSpec `json:"publicIP,omitempty"`
+	// The billing mode of the node: the value is 0 (on demand)
 	BillingMode int          `json:"billingMode,omitempty"`
+	// Number of nodes when creating in batch
 	Count       int          `json:"count" required:"true"`
+	// Extended parameter
 	ExtendParam string       `json:"extendParam,omitempty"`
 }
 
 //Gives the current status of the node
 type Status struct {
-	//The state of the Node
+	// The state of the Node
 	Phase     string `json:"phase"`
+	// The virtual machine ID of the node in the ECS
 	ServerID  string `json:"ServerID"`
+	// Elastic IP of the node
 	PublicIP  string `json:"PublicIP"`
+	//Private IP of the node
 	PrivateIP string `json:"privateIP"`
-	//The ID of the Job that is operating asynchronously in the Node
+	// The ID of the Job that is operating asynchronously in the Node
 	JobID string `json:"jobID"`
-	//Reasons for the Node to become current
+	// Reasons for the Node to become current
 	Reason  string `json:"reason"`
+	// Details of the node transitioning to the current state
 	Message string `json:"message"`
 	//The status of each component in the Node
 	Conditions Conditions `json:"conditions"`
 }
 
 type LoginSpec struct {
+	// Select the key pair name when logging in by key pair mode
 	SshKey string `json:"sshKey" required:"true"`
 }
 
 type VolumeSpec struct {
+	// Disk size in GB
 	Size        int    `json:"size" required:"true"`
+	// Disk type
 	VolumeType  string `json:"volumetype" required:"true"`
+	// Disk extension parameter
 	ExtendParam string `json:"extendParam,omitempty"`
 }
 
 type PublicIPSpec struct {
+	// List of existing elastic IP IDs
 	Ids   []string `json:"ids,omitempty"`
+	// The number of elastic IPs to be dynamically created
 	Count int      `json:"count,omitempty"`
+	// Elastic IP parameters
 	Eip   EipSpec  `json:"eip,omitempty"`
 }
 
 type EipSpec struct {
+	// The value of the iptype keyword
 	IpType    string        `json:"iptype" required:"true"`
+	// Elastic IP bandwidth parameters
 	Bandwidth BandwidthOpts `json:"bandwidth" required:"true"`
 }
 
@@ -97,34 +127,7 @@ type Conditions struct {
 	Reason string `json:"reason"`
 }
 
-type commonResult struct {
-	golangsdk.Result
-}
-
-// Extract is a function that accepts a result and extracts a node.
-func (r commonResult) Extract() (*Nodes, error) {
-	var s Nodes
-	err := r.ExtractInto(&s)
-	return &s, err
-}
-
-// ExtractNode is a function that accepts a ListOpts struct, which allows you to filter and sort
-// the returned collection for greater efficiency.
-func (r commonResult) ExtractNode(opts ListOpts) ([]Nodes, error) {
-	var s ListNodeResponse
-	err := r.ExtractInto(&s)
-	if err != nil {
-		return nil, err
-	}
-	return FilterNodes(s.Nodes, opts)
-}
-
-func (r commonResult) ExtractJob() (*Job, error) {
-	var s Job
-	err := r.ExtractInto(&s)
-	return &s, err
-}
-
+// Describes the Job Structure
 type Job struct {
 	Kind       string      `json:"kind"`
 	Apiversion string      `json:"apiVersion"`
@@ -150,6 +153,35 @@ type JobStatus struct {
 	Phase   string `json:"phase"`
 	Reason  string `json:"reason"`
 	Message string `json:"message"`
+}
+
+type commonResult struct {
+	golangsdk.Result
+}
+
+// Extract is a function that accepts a result and extracts a node.
+func (r commonResult) Extract() (*Nodes, error) {
+	var s Nodes
+	err := r.ExtractInto(&s)
+	return &s, err
+}
+
+// ExtractNode is a function that accepts a ListOpts struct, which allows you to filter and sort
+// the returned collection for greater efficiency.
+func (r commonResult) ExtractNode(opts ListOpts) ([]Nodes, error) {
+	var s ListNodeResponse
+	err := r.ExtractInto(&s)
+	if err != nil {
+		return nil, err
+	}
+	return FilterNodes(s.Nodes, opts)
+}
+
+// ExtractJob is a function that accepts a result and extracts a job.
+func (r commonResult) ExtractJob() (*Job, error) {
+	var s Job
+	err := r.ExtractInto(&s)
+	return &s, err
 }
 
 // ListResult represents the result of a list operation. Call its ExtractNode

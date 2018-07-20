@@ -6,15 +6,15 @@ import (
 	"github.com/huaweicloud/golangsdk"
 )
 
+var RequestOpts golangsdk.RequestOpts = golangsdk.RequestOpts{
+	MoreHeaders: map[string]string{"Content-Type": "application/json"},
+}
+
 // ListOpts allows the filtering of list data using given parameters.
 type ListOpts struct {
 	Name  string `json:"name"`
 	Uid   string `json:"uid"`
 	Phase string `json:"phase"`
-}
-
-var RequestOpts golangsdk.RequestOpts = golangsdk.RequestOpts{
-	MoreHeaders: map[string]string{"Content-Type": "application/json"},
 }
 
 // List returns collection of nodes.
@@ -83,21 +83,21 @@ type FilterMetadata struct {
 type CreateOpts struct {
 	// API type, fixed value Node
 	Kind string `json:"kind" required:"true"`
-	//API version, fixed value v3
+	// API version, fixed value v3
 	ApiVersion string `json:"apiversion" required:"true"`
-	//Metadata required to create a Node
+	// Metadata required to create a Node
 	Metadata CreateMetaData `json:"metadata"`
-	//specifications to create a Node
+	// specifications to create a Node
 	Spec Spec `json:"spec" required:"true"`
 }
 
 // Metadata required to create a Node
 type CreateMetaData struct {
-	//Node name
+	// Node name
 	Name string `json:"name,omitempty"`
 	// Node tag, key value pair format
 	Labels map[string]string `json:"labels,omitempty"`
-	//Node annotation, key value pair format
+	// Node annotation, key value pair format
 	Annotations map[string]string `json:"annotations,omitempty"`
 }
 
@@ -177,6 +177,7 @@ func Delete(c *golangsdk.ServiceClient, clusterid, nodeid string) (r DeleteResul
 	return
 }
 
+// GetJobDetails retrieves a particular job based on its unique ID
 func GetJobDetails(c *golangsdk.ServiceClient, jobid string) (r GetResult) {
 	_, r.Err = c.Get(getJobURL(c, jobid), &r.Body, &golangsdk.RequestOpts{
 		OkCodes:     []int{200},
