@@ -31,17 +31,17 @@ func FilterNodes(nodes []Nodes, opts ListOpts) ([]Nodes, error) {
 	var refinedNodes []Nodes
 	var matched bool
 
-	m := map[string]FilterMetadata{}
+	m := map[string]FilterStruct{}
 
 	if opts.Name != "" {
-		m["Name"] = FilterMetadata{Value: opts.Name, Driller: []string{"Metadata"}}
+		m["Name"] = FilterStruct{Value: opts.Name, Driller: []string{"Metadata"}}
 	}
 	if opts.Uid != "" {
-		m["Uid"] = FilterMetadata{Value: opts.Uid, Driller: []string{"Metadata"}}
+		m["Uid"] = FilterStruct{Value: opts.Uid, Driller: []string{"Metadata"}}
 	}
 
 	if opts.Phase != "" {
-		m["Phase"] = FilterMetadata{Value: opts.Phase, Driller: []string{"Status"}}
+		m["Phase"] = FilterStruct{Value: opts.Phase, Driller: []string{"Status"}}
 	}
 
 	if len(m) > 0 && len(nodes) > 0 {
@@ -73,7 +73,7 @@ func GetStructNestedField(v *Nodes, field string, structDriller []string) string
 	return string(f1.String())
 }
 
-type FilterMetadata struct {
+type FilterStruct struct {
 	Value   string
 	Driller []string
 }

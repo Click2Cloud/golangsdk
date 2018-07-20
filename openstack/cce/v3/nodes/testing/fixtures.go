@@ -49,3 +49,91 @@ var Expected = &nodes.Nodes{
 		},
 	},
 }
+
+
+const JobOutput = `{
+    "kind": "Job",
+    "metadata": {
+        "uid": "73ce052c-8b1b-11e8-8f9d-0255ac10193f"    
+    },
+    "spec": {
+        "type": "ScaleupCluster",
+        "clusterUID": "6951aa4d-88ef-11e8-b196-0255ac101c43",
+        "resourceName": "cluster-test",
+        "subJobs": [
+            {
+                "kind": "Job",
+                "metadata": {
+                    "uid": "73cc28df-8b1b-11e8-8f9d-0255ac10193f"
+                },
+                "spec": {
+                    "type": "CreateNode",
+                    "clusterUID": "6951aa4d-88ef-11e8-b196-0255ac101c43",
+                    "resourceName": "myhost",
+                    "subJobs": [
+                        {
+                            "kind": "Job",
+                            "metadata": {
+                                "uid": "73ce03fd-8b1b-11e8-8f9d-0255ac10193f" 
+                            },
+                            "spec": {
+                                "type": "GetPSMCert",
+                                "clusterUID": "6951aa4d-88ef-11e8-b196-0255ac101c43"
+                            },
+                            "status": {
+                                "phase": "Success"
+                            }
+                        },
+                        {
+                            "kind": "Job",
+                            "metadata": {
+                                "uid": "73ce0473-8b1b-11e8-8f9d-0255ac10193f"
+                            },
+                            "spec": {
+                                "type": "InstallNode",
+                                "clusterUID": "6951aa4d-88ef-11e8-b196-0255ac101c43",
+                                "resourceID": "73bd7e31-8b1b-11e8-8f9d-0255ac10193f"
+                            },
+                            "status": {
+                                "phase": "Success"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "status": {
+        "phase": "Success"
+    }
+}`
+
+var ExpectedJob  = &nodes.Job{
+	Kind: "Job",
+	Status:nodes.JobStatus{Phase:"Success"},
+	Metadata:nodes.JobMetadata{ID:"73ce052c-8b1b-11e8-8f9d-0255ac10193f"},
+	Spec:nodes.JobSpec{Type:"ScaleupCluster",
+	                   ClusterID:"6951aa4d-88ef-11e8-b196-0255ac101c43",
+	                   ResourceName:"cluster-test",
+	                   SubJobs:[]nodes.Job{{Kind:"Job",
+	                   						Metadata:nodes.JobMetadata{ID:"73cc28df-8b1b-11e8-8f9d-0255ac10193f"},
+	                   						Spec:nodes.JobSpec{Type:"CreateNode",
+	                   						                   ClusterID:"6951aa4d-88ef-11e8-b196-0255ac101c43",
+	                   						                   ResourceName:"myhost",
+	                   						                   SubJobs:[]nodes.Job{{Kind:"Job",
+	                   						                   				        Metadata:nodes.JobMetadata{ID:"73ce03fd-8b1b-11e8-8f9d-0255ac10193f"},
+	                   						                   				        Spec:nodes.JobSpec{Type:"GetPSMCert",
+	                   						                   				        				   ClusterID:"6951aa4d-88ef-11e8-b196-0255ac101c43"},
+	                   						                   				        Status:nodes.JobStatus{Phase:"Success"}},
+																                    {Kind:"Job",
+																	                 Metadata:nodes.JobMetadata{ID:"73ce0473-8b1b-11e8-8f9d-0255ac10193f"},
+																	                 Spec:nodes.JobSpec{Type:"InstallNode",
+																	                 ClusterID:"6951aa4d-88ef-11e8-b196-0255ac101c43",
+																	                 ResourceID:"73bd7e31-8b1b-11e8-8f9d-0255ac10193f"},
+																	                  Status:nodes.JobStatus{Phase:"Success"}},
+																					},
+
+											},
+						}},
+	},
+}
