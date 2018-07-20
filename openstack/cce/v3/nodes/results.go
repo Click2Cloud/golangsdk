@@ -130,6 +130,7 @@ type Job struct {
 	Apiversion string      `json:"apiVersion"`
 	Metadata   JobMetadata `json:"metadata"`
 	Spec       JobSpec     `json:"spec"`
+	Status     JobStatus   `json:"status"`
 }
 
 type JobMetadata struct {
@@ -137,27 +138,18 @@ type JobMetadata struct {
 }
 
 type JobSpec struct {
-	Type         string    `json:"type"`
-	ClusterUID   string    `json:"clusterUID"`
-	ResourceName string    `json:"resourceName"`
-	SubJobs      []SubJobs `json:"subJobs"`
-}
-type SubJobs struct {
-	Spec SpecJobCluster `json:"spec"`
-}
-
-type SpecJobCluster struct {
-	SubJobsCluster []SubJobsCluster `json:"subJobs"`
+	Type         string `json:"type"`
+	ClusterUID   string `json:"clusterUID"`
+	ResourceID   string `json:"resourceID"`
+	ResourceName string `json:"resourceName"`
+	SubJobs      []Job  `json:"subJobs"`
+	OwnerJob     string `json:"ownerJob"`
 }
 
-type SubJobsCluster struct {
-	SpecJobNode SpecJobNode `json:"spec"`
-}
-
-type SpecJobNode struct {
-	Type       string `json:"type"`
-	ClusterUID string `json:"clusterUID"`
-	ResourceID string `json:"resourceID"`
+type JobStatus struct {
+	Phase   string `json:"phase"`
+	Reason  string `json:"reason"`
+	Message string `json:"message"`
 }
 
 // ListResult represents the result of a list operation. Call its ExtractNode
