@@ -132,9 +132,6 @@ type Job struct {
 	Spec       JobSpec     `json:"spec"`
 }
 
-type JobStatus struct {
-	Phase string `json:"phase"`
-}
 type JobMetadata struct {
 	Uid string `json:"uid"`
 }
