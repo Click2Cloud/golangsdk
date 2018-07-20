@@ -80,7 +80,7 @@ func TestListNode(t *testing.T) {
 			Kind:       "Host",
 			Apiversion: "v3",
 			Metadata: nodes.Metadata{Name: "test-node-1234",
-				Uid: "b99acd73-5d7c-11e8-8e76-0255ac101929"},
+				Id: "b99acd73-5d7c-11e8-8e76-0255ac101929"},
 			Spec: nodes.Spec{Az: "cn-east-2a",
 				Login:       nodes.LoginSpec{SshKey: "c2c-keypair"},
 				RootVolume:  nodes.VolumeSpec{Size: 40, VolumeType: "SATA"},
@@ -225,5 +225,24 @@ func TestDeleteNode(t *testing.T) {
 
 	err := nodes.Delete(fake.ServiceClient(), "cec124c2-58f1-11e8-ad73-0255ac101926", "cf4bc001-58f1-11e8-ad73-0255ac101926").ExtractErr()
 	th.AssertNoErr(t, err)
+
+}
+
+func TestGetV3Job(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+
+	th.Mux.HandleFunc("/api/v3/projects/c59fd21fd2a94963b822d8985b884673/jobs/73ce03fd-8b1b-11e8-8f9d-0255ac10193f", func(w http.ResponseWriter, r *http.Request) {
+		th.TestMethod(t, r, "GET")
+		th.TestHeader(t, r, "X-Auth-Token", fake.TokenID)
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, JobOutput)
+	})
+
+	actual, err := nodes.GetJobDetails(fake.ServiceClient(), "73ce03fd-8b1b-11e8-8f9d-0255ac10193f").ExtractJob()
+	th.AssertNoErr(t, err)
+	expected := ExpectedJob
+	th.AssertDeepEquals(t, expected, actual)
 
 }
