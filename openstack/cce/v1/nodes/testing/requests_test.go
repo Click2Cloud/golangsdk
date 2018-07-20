@@ -65,7 +65,7 @@ func TestListNode(t *testing.T) {
 
 		})
 
-	listNodes := nodes.ListOpts{} //Name: "c2c-test-cluster-node-1"}
+	listNodes := nodes.ListOpts{} //Name: "test-cluster-node-1"}
 	//actual, err := nodes.List(fake.ServiceClient(), "38a61610-e91d-4669-b8ae-7fbc52776287").ExtractNode(listNodes)
 	actual, err := nodes.List(fake.ServiceClient(), "d83af16b-febd-4e52-bfb0-20850072e2cd").ExtractNode(listNodes)
 	if err != nil {
@@ -122,7 +122,7 @@ func TestGet(t *testing.T) {
 
 	th.AssertEquals(t, "host", sg.Kind)
 	th.AssertEquals(t, "v1", sg.ApiVersion)
-	th.AssertEquals(t, "c2c-test-cluster-node-1", sg.Metadata.Name)
+	th.AssertEquals(t, "test-cluster-node-1", sg.Metadata.Name)
 	th.AssertEquals(t, "5e6e7641-c288-40a2-a5af-014cc600d838", sg.Metadata.ID)
 	th.AssertEquals(t, "s1.medium", sg.Spec.Flavor)
 	th.AssertEquals(t, "eu-de-02", sg.Spec.AZ)
@@ -172,7 +172,7 @@ func TestDelete(t *testing.T) {
 		th.TestHeader(t, r, "X-Auth-Token", fake.TokenID)
 		w.WriteHeader(http.StatusOK)
 	})
-	name := []nodes.Host{{Name: "c2c-test-cluster-node-3"}}
+	name := []nodes.Host{{Name: "test-cluster-node-3"}}
 	rmvOpts := nodes.RemoveOpts{
 		Host: name,
 	}

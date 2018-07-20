@@ -5,7 +5,7 @@ import (
 )
 
 //Describes the Node Structure of cluster
-type ListNodeResponse struct {
+type ListNode struct {
 	// API type, fixed value "List"
 	Kind string `json:"kind"`
 	// API version, fixed value "v3"
@@ -183,13 +183,13 @@ func (r commonResult) Extract() (*Nodes, error) {
 
 // ExtractNode is a function that accepts a ListOpts struct, which allows you to filter and sort
 // the returned collection for greater efficiency.
-func (r commonResult) ExtractNode(opts ListOpts) ([]Nodes, error) {
-	var s ListNodeResponse
+func (r commonResult) ExtractNode() ([]Nodes, error) {
+	var s ListNode
 	err := r.ExtractInto(&s)
 	if err != nil {
 		return nil, err
 	}
-	return FilterNodes(s.Nodes, opts)
+	return s.Nodes,nil
 }
 
 // ExtractJob is a function that accepts a result and extracts a job.

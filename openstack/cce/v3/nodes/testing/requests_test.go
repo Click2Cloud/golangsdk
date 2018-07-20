@@ -37,7 +37,7 @@ func TestListNode(t *testing.T) {
                 "flavor": "s1.medium",
                 "az": "cn-east-2a",
                 "login": {
-                    "sshKey": "c2c-keypair",
+                    "sshKey": "test-keypair",
                     "userPassword": {}
                 },
                 "rootVolume": {
@@ -82,7 +82,7 @@ func TestListNode(t *testing.T) {
 			Metadata: nodes.Metadata{Name: "test-node-1234",
 				Id: "b99acd73-5d7c-11e8-8e76-0255ac101929"},
 			Spec: nodes.Spec{Az: "cn-east-2a",
-				Login:       nodes.LoginSpec{SshKey: "c2c-keypair"},
+				Login:       nodes.LoginSpec{SshKey: "test-keypair"},
 				RootVolume:  nodes.VolumeSpec{Size: 40, VolumeType: "SATA"},
 				BillingMode: 0,
 				DataVolumes: []nodes.VolumeSpec{
@@ -133,7 +133,7 @@ func TestCreateV3Node(t *testing.T) {
 	  "apiversion": "v3",
 	  "kind": "Node",
 	  "metadata": {
-	    "name": "c2c-hostname"
+	    "name": "test-node"
 	  },
 	  "spec": {
 	    "az": "cn-east-2a",
@@ -146,17 +146,13 @@ func TestCreateV3Node(t *testing.T) {
 	    ],
 	    "flavor": "s3.large.2",
 	    "login": {
-	      "sshKey": "c2c-keypair"
+	      "sshKey": "test-keypair"
 	    },
 	    "publicIP": {
-	      "eip": {
-	        "bandwidth": {
-	          "sharetype": "",
-	          "size": 0
-	        },
-	        "iptype": ""
-	      }
-	    },
+		      "eip": {
+		        "bandwidth": {}
+		      }
+		 },
 	    "rootVolume": {
 	      "size": 40,
 	      "volumetype": "SATA"
@@ -171,9 +167,9 @@ func TestCreateV3Node(t *testing.T) {
 	})
 	options := nodes.CreateOpts{Kind: "Node",
 		ApiVersion: "v3",
-		Metadata:   nodes.CreateMetaData{Name: "c2c-hostname"},
+		Metadata:   nodes.CreateMetaData{Name: "test-node"},
 		Spec: nodes.Spec{Flavor: "s3.large.2", Az: "cn-east-2a",
-			Login:       nodes.LoginSpec{SshKey: "c2c-keypair"},
+			Login:       nodes.LoginSpec{SshKey: "test-keypair"},
 			RootVolume:  nodes.VolumeSpec{Size: 40, VolumeType: "SATA"},
 			DataVolumes: []nodes.VolumeSpec{{Size: 100, VolumeType: "SATA"}},
 			Count:       1},
@@ -197,7 +193,7 @@ func TestUpdateV3Node(t *testing.T) {
 		th.TestJSONRequest(t, r, `
 {
     "metadata": {
-        "name": "c2c-hostname"
+        "name": "test-node"
     }
 }			`)
 
@@ -206,7 +202,7 @@ func TestUpdateV3Node(t *testing.T) {
 
 		fmt.Fprintf(w, Output)
 	})
-	options := nodes.UpdateOpts{Metadata: nodes.UpdateMetadata{Name: "c2c-hostname"}}
+	options := nodes.UpdateOpts{Metadata: nodes.UpdateMetadata{Name: "test-node"}}
 	actual, err := nodes.Update(fake.ServiceClient(), "cec124c2-58f1-11e8-ad73-0255ac101926", "cf4bc001-58f1-11e8-ad73-0255ac101926", options).Extract()
 	th.AssertNoErr(t, err)
 	expected := Expected

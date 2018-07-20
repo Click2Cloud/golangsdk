@@ -5,7 +5,7 @@ const NodeGetResponse = `
     "kind": "host",
     "apiVersion": "v1",
     "metadata": {
-        "name": "c2c-test-cluster-node-1",
+        "name": "test-cluster-node-1",
         "uuid": "5e6e7641-c288-40a2-a5af-014cc600d838",
         "spaceuuid": "c0b1f563-400a-dec4-9d6f-d69691261a5b",
         "createAt": "2018-05-11 10:04:54.712096939 +0000 UTC",
@@ -33,7 +33,7 @@ const NodeGetResponse = `
                 "volumeType": "SATA"
             }
         ],
-        "sshkey": "c2c-keypair1",
+        "sshkey": "test-keypair1",
         "status": {
             "capacity": {
                 "cpu": "1",
@@ -170,6 +170,6 @@ const NodeGetResponse = `
     },
     "replicas": 1,
     "status": "ACTIVE",
-    "message": "c2c-test-cluster-node-1"
+    "message": "test-cluster-node-1"
 }
 `

@@ -6,18 +6,23 @@ const Output = `{
     "kind": "Host",
     "apiVersion": "v3",
     "metadata": {
-        "name": "c2c-hostname"        
+        "name": "test-node"
     },
     "spec": {
         "flavor": "s3.large.2",
         "az": "cn-east-2a",
         "login": {
-            "sshKey": "c2c-keypair"
+            "sshKey": "test-keypair"
         },
         "rootVolume": {
             "volumetype": "SATA",
             "size": 40
         },
+        "publicIP": {
+		      "eip": {
+		        "bandwidth": {}
+		      }
+		    },
         "dataVolumes": [
             {
                 "volumetype": "SATA",
@@ -30,13 +35,14 @@ const Output = `{
 var Expected = &nodes.Nodes{
 	Kind:       "Host",
 	Apiversion: "v3",
-	Metadata:   nodes.Metadata{Name: "c2c-hostname"},
+	Metadata:   nodes.Metadata{Name: "test-node"},
 	Spec: nodes.Spec{
 		Flavor: "s3.large.2",
 		Az:     "cn-east-2a",
 		Login: nodes.LoginSpec{
-			SshKey: "c2c-keypair",
+			SshKey: "test-keypair",
 		},
+		PublicIP:nodes.PublicIPSpec{Eip:nodes.EipSpec{Bandwidth:nodes.BandwidthOpts{},IpType:""}},
 		RootVolume: nodes.VolumeSpec{
 			VolumeType: "SATA",
 			Size:       40,
