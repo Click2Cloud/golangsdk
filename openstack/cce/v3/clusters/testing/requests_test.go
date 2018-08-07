@@ -29,6 +29,25 @@ func TestGetV3Cluster(t *testing.T) {
 
 }
 
+func TestGetCertificateV3Cluster(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+
+	th.Mux.HandleFunc("/api/v3/projects/c59fd21fd2a94963b822d8985b884673/clusters/daa97872-59d7-11e8-a787-0255ac101f54/clustercert", func(w http.ResponseWriter, r *http.Request) {
+		th.TestMethod(t, r, "GET")
+		th.TestHeader(t, r, "X-Auth-Token", fake.TokenID)
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, CertificateOutput)
+	})
+
+	actual, err := clusters.GetCertificate(fake.ServiceClient(), "daa97872-59d7-11e8-a787-0255ac101f54").ExtractCertificate()
+	th.AssertNoErr(t, err)
+	expected := CertificateExpected
+	th.AssertDeepEquals(t, expected, actual)
+
+}
+
 func TestListV3Cluster(t *testing.T) {
 
 	th.SetupHTTP()
