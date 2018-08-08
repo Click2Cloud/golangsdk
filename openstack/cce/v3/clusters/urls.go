@@ -3,7 +3,7 @@ package clusters
 import "github.com/huaweicloud/golangsdk"
 
 const (
-	rootPath = "clusters"
+	rootPath     = "clusters"
 	resourcePath = "clustercert"
 )
 

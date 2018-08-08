@@ -110,11 +110,11 @@ type Certificate struct {
 	//Resource type. This parameter must be set to Config.
 	Kind string `json:"kind"`
 	//API version. This parameter is fixed to v1.
-	ApiVersion string `json:"apiVersion"`
+	ApiVersion  string                 `json:"apiVersion"`
 	Preferences map[string]interface{} `json:"preferences"`
 	//Cluster list.
 	Cluster []CertCluster `json:"clusters"`
-	Users []Users `json:"users"`
+	Users   []Users       `json:"users"`
 	//Context list.
 	Contexts []Contexts `json:"contexts"`
 	//The current context.
@@ -174,7 +174,7 @@ func (r commonResult) Extract() (*Clusters, error) {
 	return &s, err
 }
 
-// Extract is a function that accepts a result and extracts a certificate.
+// ExtractCertificate is a function that accepts a result and extracts a certificate.
 func (r commonResult) ExtractCertificate() (*Certificate, error) {
 	var s Certificate
 	err := r.ExtractInto(&s)

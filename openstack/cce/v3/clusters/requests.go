@@ -199,4 +199,3 @@ func Delete(c *golangsdk.ServiceClient, id string) (r DeleteResult) {
 	})
 	return
 }
-
