@@ -1,6 +1,9 @@
 package shares
 
 import (
+	"encoding/json"
+	"time"
+
 	"github.com/huaweicloud/golangsdk"
 	"github.com/huaweicloud/golangsdk/pagination"
 )
@@ -17,13 +20,13 @@ type Share struct {
 	//ID of the project that shares the backup
 	FromProjectId string `json:"from_project_id"`
 	// Creation time of the backup share
-	CreatedAt string `json:"created_at"`
+	CreatedAt time.Time `json:"created_at"`
 	//Update time of the backup share
-	UpdatedAt string `json:"updated_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 	//Whether the backup has been deleted
 	Deleted string `json:"deleted"`
 	//Deletion time
-	DeletedAt string `json:"deleted_at"`
+	DeletedAt time.Time `json:"deleted_at"`
 }
 
 type Backup struct {
@@ -48,13 +51,13 @@ type Backup struct {
 	//Container of the backup
 	Container string `json:"container"`
 	//Backup creation time
-	CreatedAt string `json:"created_at"`
+	CreatedAt time.Time `json:"-"`
 	//Backup metadata
 	ServiceMetadata string `json:"service_metadata"`
 	//Time when the backup was updated
-	UpdatedAt string `json:"updated_at"`
+	UpdatedAt time.Time `json:"-"`
 	//Current time
-	DataTimeStamp string `json:"data_timestamp"`
+	DataTimeStamp time.Time `json:"-"`
 	//Whether a dependent backup exists
 	DependentBackups bool `json:"has_dependent_backups"`
 	//ID of the snapshot associated with the backup
@@ -138,4 +141,50 @@ type GetResult struct {
 // method to determine if the request succeeded or failed.
 type DeleteResult struct {
 	golangsdk.ErrResult
+}
+
+// UnmarshalJSON overrides the default, to convert the JSON API response into our Backup struct
+func (r *Backup) UnmarshalJSON(b []byte) error {
+	type tmp Backup
+	var s struct {
+		tmp
+		CreatedAt     golangsdk.JSONRFC3339MilliNoZ `json:"created_at"`
+		UpdatedAt     golangsdk.JSONRFC3339MilliNoZ `json:"updated_at"`
+		DataTimeStamp golangsdk.JSONRFC3339MilliNoZ `json:"data_timestamp"`
+	}
+	err := json.Unmarshal(b, &s)
+	if err != nil {
+		return err
+	}
+
+	*r = Backup(s.tmp)
+
+	r.CreatedAt = time.Time(s.CreatedAt)
+	r.UpdatedAt = time.Time(s.UpdatedAt)
+	r.DataTimeStamp = time.Time(s.DataTimeStamp)
+
+	return nil
+}
+
+// UnmarshalJSON overrides the default, to convert the JSON API response into our Share struct
+func (r *Share) UnmarshalJSON(b []byte) error {
+	type tmp Share
+	var s struct {
+		tmp
+		CreatedAt golangsdk.JSONRFC3339MilliNoZ `json:"created_at"`
+		UpdatedAt golangsdk.JSONRFC3339MilliNoZ `json:"updated_at"`
+		DeletedAt golangsdk.JSONRFC3339MilliNoZ `json:"deleted_at"`
+	}
+	err := json.Unmarshal(b, &s)
+	if err != nil {
+		return err
+	}
+
+	*r = Share(s.tmp)
+
+	r.CreatedAt = time.Time(s.CreatedAt)
+	r.UpdatedAt = time.Time(s.UpdatedAt)
+	r.DeletedAt = time.Time(s.DeletedAt)
+
+	return nil
 }
