@@ -106,9 +106,7 @@ func (r *OperationDefinitionResp) UnmarshalJSON(b []byte) error {
 	}
 
 	*r = OperationDefinitionResp(s.tmp)
-	r.MaxBackups, err = strconv.Atoi(s.MaxBackups)
-	r.RetentionDurationDays, err = strconv.Atoi(s.RetentionDurationDays)
-	//r.Permanent, err = strconv.ParseBool(s.Permanent)
+
 	switch s.MaxBackups {
 	case "":
 		r.MaxBackups = 0
