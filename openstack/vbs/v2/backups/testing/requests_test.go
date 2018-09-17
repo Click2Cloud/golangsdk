@@ -37,7 +37,7 @@ func TestGetBackup(t *testing.T) {
 		ObjectCount:      0,
 		TenantId:         "17fbda95add24720a4038ba4b1c705ed",
 		Container:        "a704c75f-f0d1-4efa-9fd6-7557fe1ee8d3",
-		AZ:               "eu-de-01",
+		AvailabilityZone: "eu-de-01",
 		DependentBackups: false,
 		SnapshotId:       "a704c75f-f0d1-4efa-9fd6-7557fe1ee8d3",
 		VolumeId:         "5024a06e-6990-4f12-9dcc-8fe26b01a710",
@@ -86,10 +86,10 @@ func TestCreateRestore(t *testing.T) {
 	defer th.TeardownHTTP()
 	HandleRestoreSuccessfully(t, RestoreOutput)
 
-	restoreOpts := backups.RestoreOpts{
+	restoreOpts := backups.BackupRestoreOpts{
 		VolumeId: "5024a06e-6990-4f12-9dcc-8fe26b01a710",
 	}
-	actual, err := backups.CreateRestore(fake.ServiceClient(), "87566ed6-72cb-4053-aa6e-6f6216b3d507", restoreOpts).ExtractRestore()
+	actual, err := backups.CreateBackupRestore(fake.ServiceClient(), "87566ed6-72cb-4053-aa6e-6f6216b3d507", restoreOpts).ExtractBackupRestore()
 	th.AssertNoErr(t, err)
 
 	expected := RestoreExpected

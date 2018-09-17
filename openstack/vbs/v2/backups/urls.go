@@ -3,22 +3,22 @@ package backups
 import "github.com/huaweicloud/golangsdk"
 
 const (
-	rootPath     = "cloudbackups"
-	resourcePath = "backups"
+	cloudNativeRootPath = "cloudbackups"
+	osNativeRootPath    = "backups"
 )
 
 func rootURL(c *golangsdk.ServiceClient) string {
-	return c.ServiceURL(c.ProjectID, rootPath)
+	return c.ServiceURL(c.ProjectID, cloudNativeRootPath)
 }
 
 func resourceURL(c *golangsdk.ServiceClient, id string) string {
-	return c.ServiceURL(c.ProjectID, resourcePath, id)
+	return c.ServiceURL(c.ProjectID, osNativeRootPath, id)
 }
 
 func listURL(c *golangsdk.ServiceClient) string {
-	return c.ServiceURL(c.ProjectID, resourcePath, "detail")
+	return c.ServiceURL(c.ProjectID, osNativeRootPath, "detail")
 }
 
 func restoreURL(c *golangsdk.ServiceClient, id string) string {
-	return c.ServiceURL(c.ProjectID, resourcePath, id, "restore")
+	return c.ServiceURL(c.ProjectID, osNativeRootPath, id, "restore")
 }
