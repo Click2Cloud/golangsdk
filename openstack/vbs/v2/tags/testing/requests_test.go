@@ -19,7 +19,7 @@ func TestCreateV2Tag(t *testing.T) {
 		th.TestJSONRequest(t, r, AddTag)
 		w.WriteHeader(http.StatusNoContent)
 	})
-	options := tags.CreateOpts{Tag: tags.ActionTags{Key: "0f187b65-8d0e-4fc0-9096-3b55d330531e", Value: "volume"}}
+	options := tags.CreateOpts{Tag: tags.Tag{Key: "0f187b65-8d0e-4fc0-9096-3b55d330531e", Value: "volume"}}
 	s := tags.Create(fake.ServiceClient(), "ed8b9f73-4415-494d-a54e-5f3373bc353d", options)
 	th.AssertNoErr(t, s.Err)
 }
@@ -52,8 +52,7 @@ func TestGetV2Tag(t *testing.T) {
 	s, err := tags.Get(fake.ServiceClient(), "ed8b9f73-4415-494d-a54e-5f3373bc353d").Extract()
 
 	th.AssertNoErr(t, err)
-	//th.AssertDeepEquals(t, s, &tags.Tag{Tags:[]tags.Tags{tags.Tags{Key:"RUNNING", Value:"0781095c-b8ab-4ce5-99f3-4c5f6ff75319"}, tags.Tags{Key:"WAITING", Value:""}}})
-	th.AssertDeepEquals(t, s, &tags.Tags{Tag: []tags.ActionTags{{Key: "RUNNING", Value: "0781095c-b8ab-4ce5-99f3-4c5f6ff75319"}, {Key: "WAITING", Value: ""}}})
+	th.AssertDeepEquals(t, s, &tags.RespTags{Tags: []tags.Tag{{Key: "RUNNING", Value: "0781095c-b8ab-4ce5-99f3-4c5f6ff75319"}, {Key: "WAITING", Value: ""}}})
 }
 
 func TestBatchActionsV2Tag(t *testing.T) {
@@ -65,7 +64,7 @@ func TestBatchActionsV2Tag(t *testing.T) {
 		th.TestJSONRequest(t, r, batchAction)
 		w.WriteHeader(http.StatusNoContent)
 	})
-	options := tags.BatchOpts{Action: tags.ActionUpdate, Tags: []tags.ActionTags{{Key: "0f187b65-8d0e-4fc0-9096-3b55d330531e", Value: "volume"}, {Key: "0f187b65-8d0e-4fc0-9096-3b55d330531d", Value: "volume"}}}
+	options := tags.BatchOpts{Action: tags.ActionUpdate, Tags: []tags.Tag{{Key: "0f187b65-8d0e-4fc0-9096-3b55d330531e", Value: "volume"}, {Key: "0f187b65-8d0e-4fc0-9096-3b55d330531d", Value: "volume"}}}
 	s := tags.BatchAction(fake.ServiceClient(), "ed8b9f73-4415-494d-a54e-5f3373bc353d", options)
 	th.AssertNoErr(t, s.Err)
 }
@@ -96,8 +95,8 @@ func TestQueryV2Tags(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprintf(w, TagList)
 	})
-	queryOpts := tags.QueryOpts{Action: "filter", Tags: []tags.QueryTags{{Key: "Tag001", Values: []string{"Value001", "Value002"}}}}
-	actual, err := tags.Query(fake.ServiceClient(), queryOpts).ExtractResources()
+	queryOpts := tags.ListOpts{Action: "filter", Tags: []tags.Tags{{Key: "Tag001", Values: []string{"Value001", "Value002"}}}}
+	actual, err := tags.ListResources(fake.ServiceClient(), queryOpts).ExtractResources()
 	th.AssertNoErr(t, err)
 	expected := ExpectedTags
 	th.AssertDeepEquals(t, expected, actual)

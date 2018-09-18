@@ -54,5 +54,5 @@ var batchAction = `{
 
 var ExpectedTags = &tags.Resources{
 	TotalCount: 1,
-	Resource:   []tags.Resource{tags.Resource{ResourceName: "name", ResourceID: "0781095c-b8ab-4ce5-99f3-4c5f6ff75319", Tags: []tags.Tag{{Key: "key", Value: "value"}}}},
+	Resource:   []tags.Resource{{ResourceName: "name", ResourceID: "0781095c-b8ab-4ce5-99f3-4c5f6ff75319", Tags: []tags.Tag{{Key: "key", Value: "value"}}}},
 }
