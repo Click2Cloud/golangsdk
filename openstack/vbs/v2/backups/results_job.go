@@ -1,10 +1,8 @@
 package backups
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/huaweicloud/golangsdk"
 )
@@ -18,8 +16,8 @@ type JobStatus struct {
 	Entities   map[string]string `json:"entities"`
 	JobID      string            `json:"job_id"`
 	JobType    string            `json:"job_type"`
-	BeginTime  time.Time         `json:"-"`
-	EndTime    time.Time         `json:"-"`
+	BeginTime  string            `json:"begin_time"`
+	EndTime    string            `json:"end_time"`
 	ErrorCode  string            `json:"error_code"`
 	FailReason string            `json:"fail_reason"`
 	SubJobs    []JobStatus       `json:"sub_jobs"`
@@ -35,27 +33,6 @@ func (r JobResult) ExtractJobResponse() (*JobResponse, error) {
 	return job, err
 }
 
-// UnmarshalJSON overrides the default, to convert the JSON API response into our JobStatus struct
-func (r *JobStatus) UnmarshalJSON(b []byte) error {
-	type tmp JobStatus
-	var s struct {
-		tmp
-		BeginTime golangsdk.JSONRFC3339Milli `json:"begin_time"`
-		EndTime   golangsdk.JSONRFC3339Milli `json:"end_time"`
-	}
-	err := json.Unmarshal(b, &s)
-	if err != nil {
-		return err
-	}
-
-	*r = JobStatus(s.tmp)
-
-	r.BeginTime = time.Time(s.BeginTime)
-	r.EndTime = time.Time(s.EndTime)
-
-	return nil
-}
-
 func (r JobResult) ExtractJobStatus() (*JobStatus, error) {
 	job := new(JobStatus)
 	err := r.ExtractInto(job)
@@ -64,14 +41,14 @@ func (r JobResult) ExtractJobStatus() (*JobStatus, error) {
 
 func WaitForJobSuccess(client *golangsdk.ServiceClient, secs int, jobID string) error {
 
-	client.Endpoint = strings.Replace(client.Endpoint, "v2", "v1", 1)
+	jobClient := *client
+	jobClient.Endpoint = strings.Replace(jobClient.Endpoint, "v2", "v1", 1)
 	return golangsdk.WaitFor(secs, func() (bool, error) {
 		job := new(JobStatus)
-		_, err := client.Get(client.ServiceURL(client.ProjectID, "jobs", jobID), &job, nil)
+		_, err := jobClient.Get(jobClient.ServiceURL(jobClient.ProjectID, "jobs", jobID), &job, nil)
 		if err != nil {
 			return false, err
 		}
-		fmt.Printf("JobStatus: %+v.\n", job)
 
 		if job.Status == "SUCCESS" {
 			return true, nil
@@ -87,13 +64,13 @@ func WaitForJobSuccess(client *golangsdk.ServiceClient, secs int, jobID string) 
 
 func GetJobEntity(client *golangsdk.ServiceClient, jobId string, label string) (interface{}, error) {
 
-	client.Endpoint = strings.Replace(client.Endpoint, "v2", "v1", 1)
+	jobClient := *client
+	jobClient.Endpoint = strings.Replace(jobClient.Endpoint, "v2", "v1", 1)
 	job := new(JobStatus)
-	_, err := client.Get(client.ServiceURL(client.ProjectID, "jobs", jobId), &job, nil)
+	_, err := jobClient.Get(jobClient.ServiceURL(jobClient.ProjectID, "jobs", jobId), &job, nil)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("JobStatus: %+v.\n", job)
 
 	if job.Status == "SUCCESS" {
 		if e := job.Entities[label]; e != "" {
