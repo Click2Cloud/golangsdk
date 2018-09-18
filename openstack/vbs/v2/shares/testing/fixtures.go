@@ -67,10 +67,10 @@ func HandleGetSuccessfully(t *testing.T) {
 
 // CreateExpected represents the expected object from a Create request.
 var CreateExpected = []shares.Share{{
-	BackupId:      "87566ed6-72cb-4053-aa6e-6f6216b3d507",
-	ToProjectId:   "91d687759aed45d28b5f6084bc2fa8ad",
-	FromProjectId: "17fbda95add24720a4038ba4b1c705ed",
-	Id:            "34c38ce7-f35c-44f2-a8d8-8d4ebab0cfbb",
+	BackupID:      "87566ed6-72cb-4053-aa6e-6f6216b3d507",
+	ToProjectID:   "91d687759aed45d28b5f6084bc2fa8ad",
+	FromProjectID: "17fbda95add24720a4038ba4b1c705ed",
+	ID:            "34c38ce7-f35c-44f2-a8d8-8d4ebab0cfbb",
 },
 }
 

@@ -12,14 +12,14 @@ type Share struct {
 	//Details about the source backup
 	Backup Backup `json:"backup"`
 	//Backup ID
-	BackupId string `json:"backup_id"`
+	BackupID string `json:"backup_id"`
 	//Backup share ID
-	Id string `json:"id"`
+	ID string `json:"id"`
 	//ID of the project with which the backup is shared
-	ToProjectId string `json:"to_project_id"`
+	ToProjectID string `json:"to_project_id"`
 	//ID of the project that shares the backup
-	FromProjectId string `json:"from_project_id"`
-	// Creation time of the backup share
+	FromProjectID string `json:"from_project_id"`
+	//Creation time of the backup share
 	CreatedAt time.Time `json:"created_at"`
 	//Update time of the backup share
 	UpdatedAt time.Time `json:"updated_at"`
@@ -31,7 +31,7 @@ type Share struct {
 
 type Backup struct {
 	//Backup ID
-	Id string `json:"id"`
+	ID string `json:"id"`
 	//Backup name
 	Name string `json:"name"`
 	//Backup status
@@ -39,9 +39,9 @@ type Backup struct {
 	//Backup description
 	Description string `json:"description"`
 	//AZ where the backup resides
-	AZ string `json:"availability_zone"`
+	AvailabilityZone string `json:"availability_zone"`
 	//Source volume ID of the backup
-	VolumeId string `json:"volume_id"`
+	VolumeID string `json:"volume_id"`
 	//Cause of the backup failure
 	FailReason string `json:"fail_reason"`
 	//Backup size
@@ -61,9 +61,9 @@ type Backup struct {
 	//Whether a dependent backup exists
 	DependentBackups bool `json:"has_dependent_backups"`
 	//ID of the snapshot associated with the backup
-	SnapshotId string `json:"snapshot_id"`
+	SnapshotID string `json:"snapshot_id"`
 	//Whether the backup is an incremental backup
-	Incremental bool `json:"is_incremental"`
+	IsIncremental bool `json:"is_incremental"`
 }
 
 type commonResult struct {
@@ -76,7 +76,7 @@ type SharePage struct {
 	pagination.LinkedPageBase
 }
 
-// Extract is a function that accepts a result and extracts a share.
+// Extract is a function that accepts a result and extracts shares.
 func (r commonResult) Extract() ([]Share, error) {
 	var s struct {
 		Share []Share `json:"shared"`
@@ -85,8 +85,8 @@ func (r commonResult) Extract() ([]Share, error) {
 	return s.Share, err
 }
 
-// ExtractGet is a function that accepts a result and extracts a share.
-func (r commonResult) ExtractGet() (*Share, error) {
+// ExtractShare is a function that accepts a result and extracts a share.
+func (r commonResult) ExtractShare() (*Share, error) {
 	var s struct {
 		Share *Share `json:"shared"`
 	}
@@ -110,14 +110,14 @@ func (r SharePage) NextPageURL() (string, error) {
 
 // IsEmpty checks whether a SharePage struct is empty.
 func (r SharePage) IsEmpty() (bool, error) {
-	is, err := ExtractShares(r)
+	is, err := ExtractShareList(r)
 	return len(is) == 0, err
 }
 
-// ExtractShares accepts a Page struct, specifically a SharePage struct,
+// ExtractShareList accepts a Page struct, specifically a SharePage struct,
 // and extracts the elements into a slice of Shares struct. In other words,
 // a generic collection is mapped into a relevant slice.
-func ExtractShares(r pagination.Page) ([]Share, error) {
+func ExtractShareList(r pagination.Page) ([]Share, error) {
 	var s struct {
 		Shares []Share `json:"shared"`
 	}
@@ -131,7 +131,7 @@ type CreateResult struct {
 	commonResult
 }
 
-// GetResult represents the result of a get operation. Call its ExtractGet
+// GetResult represents the result of a get operation. Call its ExtractShare
 // method to interpret it as a Share.
 type GetResult struct {
 	commonResult
