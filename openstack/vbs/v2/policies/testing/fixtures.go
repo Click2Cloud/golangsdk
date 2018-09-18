@@ -86,7 +86,7 @@ const DisssociateOutput = `
 var ListPolicies = []policies.Policy{
 	{ID: "ed8b9f73-4415-494d-a54e-5f3373bc353d",
 		Name: "plan01",
-		ScheduledPolicy: policies.Schedule{
+		ScheduledPolicy: policies.ScheduledPolicy{
 			Frequency:         1,
 			RemainFirstBackup: "Y",
 			RententionNum:     10,
@@ -97,7 +97,7 @@ var ListPolicies = []policies.Policy{
 	},
 	{ID: "8dd473c9-5a80-4ad5-862e-492c9af2b6bd",
 		Name: "plan02",
-		ScheduledPolicy: policies.Schedule{
+		ScheduledPolicy: policies.ScheduledPolicy{
 			Frequency:         1,
 			RemainFirstBackup: "Y",
 			RententionNum:     10,
@@ -110,7 +110,7 @@ var ListPolicies = []policies.Policy{
 
 var Update = &policies.Policy{
 	Name: "Test_02",
-	ScheduledPolicy: policies.Schedule{
+	ScheduledPolicy: policies.ScheduledPolicy{
 		Frequency:         1,
 		RemainFirstBackup: "Y",
 		RententionNum:     10,
@@ -121,7 +121,7 @@ var Update = &policies.Policy{
 
 var Expected = &policies.Policy{
 	Name: "Test_Policy",
-	ScheduledPolicy: policies.Schedule{
+	ScheduledPolicy: policies.ScheduledPolicy{
 		Frequency:         1,
 		RemainFirstBackup: "Y",
 		RententionNum:     10,
@@ -130,20 +130,20 @@ var Expected = &policies.Policy{
 	},
 }
 
-var Associate = &policies.Resources{
-	SuccessResources: []policies.ResultResources{
+var Associate = &policies.ResultResources{
+	SuccessResources: []policies.Resource{
 		{ResourceID: "0f187b65-8d0e-4fc0-9096-3b55d330531e",
-			ResourceType: "volume",
-			OSVolume:     "pod01.eu-de-01",
-			Az:           "eu-de-01",
+			ResourceType:     "volume",
+			Pod:              "pod01.eu-de-01",
+			AvailabilityZone: "eu-de-01",
 		},
 	},
-	FailResources: []policies.ResultResources{},
+	FailResources: []policies.Resource{},
 }
 
-var Disassociate = &policies.Resources{
-	SuccessResources: []policies.ResultResources{
+var Disassociate = &policies.ResultResources{
+	SuccessResources: []policies.Resource{
 		{ResourceID: "0f187b65-8d0e-4fc0-9096-3b55d330531e"},
 	},
-	FailResources: []policies.ResultResources{},
+	FailResources: []policies.Resource{},
 }
