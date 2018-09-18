@@ -1,8 +1,10 @@
 package backups
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/huaweicloud/golangsdk"
 )
@@ -16,6 +18,8 @@ type JobStatus struct {
 	Entities   map[string]string `json:"entities"`
 	JobID      string            `json:"job_id"`
 	JobType    string            `json:"job_type"`
+	BeginTime  time.Time         `json:"-"`
+	EndTime    time.Time         `json:"-"`
 	ErrorCode  string            `json:"error_code"`
 	FailReason string            `json:"fail_reason"`
 	SubJobs    []JobStatus       `json:"sub_jobs"`
@@ -29,6 +33,27 @@ func (r JobResult) ExtractJobResponse() (*JobResponse, error) {
 	job := new(JobResponse)
 	err := r.ExtractInto(job)
 	return job, err
+}
+
+// UnmarshalJSON overrides the default, to convert the JSON API response into our JobStatus struct
+func (r *JobStatus) UnmarshalJSON(b []byte) error {
+	type tmp JobStatus
+	var s struct {
+		tmp
+		BeginTime golangsdk.JSONRFC3339Milli `json:"begin_time"`
+		EndTime   golangsdk.JSONRFC3339Milli `json:"end_time"`
+	}
+	err := json.Unmarshal(b, &s)
+	if err != nil {
+		return err
+	}
+
+	*r = JobStatus(s.tmp)
+
+	r.BeginTime = time.Time(s.BeginTime)
+	r.EndTime = time.Time(s.EndTime)
+
+	return nil
 }
 
 func (r JobResult) ExtractJobStatus() (*JobStatus, error) {
