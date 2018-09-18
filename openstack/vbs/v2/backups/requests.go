@@ -159,7 +159,9 @@ func CreateBackupRestore(c *golangsdk.ServiceClient, id string, opts RestoreOpts
 	return
 }
 
-// Get retrieves a particular backup based on its unique ID.
+// Get retrieves a particular backup based on its unique ID. To extract
+//// the Backup object from the response, call the Extract method on the
+//// GetResult.
 func Get(c *golangsdk.ServiceClient, id string) (r GetResult) {
 	_, r.Err = c.Get(resourceURL(c, id), &r.Body, nil)
 	return
