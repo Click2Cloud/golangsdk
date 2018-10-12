@@ -73,3 +73,25 @@ var updateResponse = `
     "tracker_name": "system"
 }
 `
+
+var getResponse = `
+[
+    {
+        "bucket_name": "tf-test-bucket",
+        "file_prefix_name": "yO8Q",
+        "smn": {
+            "is_send_all_key_operation": false,
+            "is_support_smn": true,
+            "need_notify_user_list": [
+                "user1"
+            ],
+            "operations": [
+                "login"
+            ],
+            "topic_id": "urn:smn:eu-de:626ce20e52a346c090b09cffc3e038e5:tf-test-topic"
+        },
+        "status": "enabled",
+        "tracker_name": "system"
+    }
+]
+`

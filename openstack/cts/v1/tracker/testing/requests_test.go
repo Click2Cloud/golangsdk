@@ -10,6 +10,29 @@ import (
 	fake "github.com/huaweicloud/golangsdk/testhelper/client"
 )
 
+func TestGet(t *testing.T) {
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+
+	th.Mux.HandleFunc("/tracker", func(w http.ResponseWriter, r *http.Request) {
+		th.TestMethod(t, r, "GET")
+		th.TestHeader(t, r, "X-Auth-Token", fake.TokenID)
+
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+
+		fmt.Fprintf(w, getResponse)
+	})
+
+	s, err := tracker.Get(fake.ServiceClient()).ExtractTracker()
+	th.AssertNoErr(t, err)
+	th.AssertEquals(t, "system", s[0].TrackerName)
+	th.AssertEquals(t, "tf-test-bucket", s[0].BucketName)
+	th.AssertEquals(t, "enabled", s[0].Status)
+	th.AssertEquals(t, "urn:smn:eu-de:626ce20e52a346c090b09cffc3e038e5:tf-test-topic", s[0].SimpleMessageNotification.TopicID)
+	th.AssertEquals(t, "yO8Q", s[0].FilePrefixName)
+}
+
 func TestCreate(t *testing.T) {
 	th.SetupHTTP()
 	defer th.TeardownHTTP()
@@ -97,4 +120,42 @@ func TestDelete(t *testing.T) {
 
 	result := tracker.Delete(fake.ServiceClient())
 	th.AssertNoErr(t, result.Err)
+}
+
+func TestList(t *testing.T) {
+
+	th.SetupHTTP()
+	defer th.TeardownHTTP()
+
+	th.Mux.HandleFunc("/tracker", func(w http.ResponseWriter, r *http.Request) {
+		th.TestMethod(t, r, "GET")
+		th.TestHeader(t, r, "X-Auth-Token", fake.TokenID)
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+
+		fmt.Fprintf(w, getResponse)
+	})
+
+	actual, err := tracker.List(fake.ServiceClient(), tracker.ListOpts{})
+	if err != nil {
+		t.Errorf("Failed to extract cts tracker: %v", err)
+	}
+
+	expected := []tracker.Tracker{
+		{
+			Status:         "enabled",
+			BucketName:     "tf-test-bucket",
+			FilePrefixName: "yO8Q",
+			TrackerName:    "system",
+			SimpleMessageNotification: tracker.SimpleMessageNotification{
+				IsSupportSMN:          true,
+				TopicID:               "urn:smn:eu-de:626ce20e52a346c090b09cffc3e038e5:tf-test-topic",
+				IsSendAllKeyOperation: false,
+				Operations:            []string{"login"},
+				NeedNotifyUserList:    []string{"user1"},
+			},
+		},
+	}
+
+	th.AssertDeepEquals(t, expected, actual)
 }
