@@ -234,10 +234,15 @@ type ListStatusResult struct {
 	commonResult
 }
 
-func (r ListStatusResult) Extract() (*ListStatusResponse, error) {
-	var response ListStatusResponse
-	err := r.ExtractInto(&response)
-	return &response, err
+// Extract is a function that accepts a ListStatusOpts struct, which allows you to filter and sort
+// the returned collection for greater efficiency.
+func (r commonResult) Extract() ([]DdosStatus, error) {
+	var s ListStatusResponse
+	err := r.ExtractInto(&s)
+	if err != nil {
+		return nil, err
+	}
+	return s.DdosStatus, nil
 }
 
 type ListStatusResponse struct {
@@ -245,19 +250,21 @@ type ListStatusResponse struct {
 	Total int `json:"total,"`
 
 	// List of defense statuses
-	DdosStatus []struct {
-		// Floating IP address
-		FloatingIpAddress string `json:"floating_ip_address,"`
+	DdosStatus []DdosStatus `json:"ddosStatus,"`
+}
 
-		// ID of an EIP
-		FloatingIpId string `json:"floating_ip_id,"`
+type DdosStatus struct {
+	// Floating IP address
+	FloatingIpAddress string `json:"floating_ip_address,"`
 
-		// EIP type.
-		NetworkType string `json:"network_type,"`
+	// ID of an EIP
+	FloatingIpId string `json:"floating_ip_id,"`
 
-		// Defense status
-		Status string `json:"status,"`
-	} `json:"ddosStatus,"`
+	// EIP type.
+	NetworkType string `json:"network_type,"`
+
+	// Defense status
+	Status string `json:"status,"`
 }
 
 type UpdateResult struct {

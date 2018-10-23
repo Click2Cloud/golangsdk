@@ -133,19 +133,23 @@ func HandleUpdateSuccessfully(t *testing.T) {
 	})
 }
 
-var ListStatusResponse = antiddos.ListStatusResponse{
-	Total: 2,
+var ListStatusResponse = []antiddos.DdosStatus{
+	{
+		FloatingIpId:      "4d60bba4-0791-4e82-8262-9bdffaeb1d14",
+		FloatingIpAddress: "49.4.4.36",
+		NetworkType:       "EIP",
+		Status:            "notConfig",
+	},
 }
 
 const ListStatusOutput string = `
 {
-  "total": 2,
+  "total": 10,
   "ddosStatus": [{
     "floating_ip_id": "4d60bba4-0791-4e82-8262-9bdffaeb1d14",
     "floating_ip_address": "49.4.4.36",
     "network_type": "EIP",
-    "status": "notConfig",
-    "blackhole_endtime": 0
+    "status": "notConfig"
   }]
 }
 `
@@ -164,18 +168,6 @@ func HandleListStatusSuccessfully(t *testing.T) {
 		if ip == "49." && limit == "2" && offset == "1" && status == "notConfig" {
 			fmt.Fprintf(w, ListStatusOutput)
 		}
-	})
-
-	ListStatusResponse.DdosStatus = append(ListStatusResponse.DdosStatus, struct {
-		FloatingIpAddress string `json:"floating_ip_address,"`
-		FloatingIpId      string `json:"floating_ip_id,"`
-		NetworkType       string `json:"network_type,"`
-		Status            string `json:"status,"`
-	}{
-		FloatingIpId:      "4d60bba4-0791-4e82-8262-9bdffaeb1d14",
-		FloatingIpAddress: "49.4.4.36",
-		NetworkType:       "EIP",
-		Status:            "notConfig",
 	})
 }
 
