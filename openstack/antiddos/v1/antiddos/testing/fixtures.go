@@ -618,24 +618,14 @@ var ListLogsOutput = `
 }
 `
 
-var ListLogsResponse = antiddos.ListLogsResponse{
-	Total: 1,
-	Logs: []struct {
-		StartTime      int `json:"start_time,"`
-		EndTime        int `json:"end_time,"`
-		Status         int `json:"status,"`
-		TriggerBps     int `json:"trigger_bps,"`
-		TriggerPps     int `json:"trigger_pps,"`
-		TriggerHttpPps int `json:"trigger_http_pps,"`
-	}{
-		{
-			StartTime:      1473217200000,
-			EndTime:        1473242400000,
-			Status:         1,
-			TriggerBps:     51106,
-			TriggerPps:     2600,
-			TriggerHttpPps: 3589,
-		},
+var ListLogsResponse = []antiddos.Logs{
+	{
+		StartTime:      1473217200000,
+		EndTime:        1473242400000,
+		Status:         1,
+		TriggerBps:     51106,
+		TriggerPps:     2600,
+		TriggerHttpPps: 3589,
 	},
 }
 
@@ -701,43 +691,33 @@ var DailyReportOutput = `
 }
 `
 
-var DailyReportResponse = antiddos.DailyReportResponse{
-	Data: []struct {
-		PeriodStart int `json:"period_start,"`
-		BpsIn       int `json:"bps_in,"`
-		BpsAttack   int `json:"bps_attack,"`
-		TotalBps    int `json:"total_bps,"`
-		PpsIn       int `json:"pps_in,"`
-		PpsAttack   int `json:"pps_attack,"`
-		TotalPps    int `json:"total_pps,"`
-	}{
-		{
-			PeriodStart: 1521650068727,
-			BpsIn:       0,
-			BpsAttack:   0,
-			TotalBps:    0,
-			PpsIn:       0,
-			PpsAttack:   0,
-			TotalPps:    0,
-		},
-		{
-			PeriodStart: 1521650368727,
-			BpsIn:       0,
-			BpsAttack:   0,
-			TotalBps:    0,
-			PpsIn:       0,
-			PpsAttack:   0,
-			TotalPps:    0,
-		},
-		{
-			PeriodStart: 1521650668727,
-			BpsIn:       1,
-			BpsAttack:   0,
-			TotalBps:    1,
-			PpsIn:       2,
-			PpsAttack:   0,
-			TotalPps:    2,
-		},
+var DailyReportResponse = []antiddos.Data{
+	{
+		PeriodStart: 1521650068727,
+		BpsIn:       0,
+		BpsAttack:   0,
+		TotalBps:    0,
+		PpsIn:       0,
+		PpsAttack:   0,
+		TotalPps:    0,
+	},
+	{
+		PeriodStart: 1521650368727,
+		BpsIn:       0,
+		BpsAttack:   0,
+		TotalBps:    0,
+		PpsIn:       0,
+		PpsAttack:   0,
+		TotalPps:    0,
+	},
+	{
+		PeriodStart: 1521650668727,
+		BpsIn:       1,
+		BpsAttack:   0,
+		TotalBps:    1,
+		PpsIn:       2,
+		PpsAttack:   0,
+		TotalPps:    2,
 	},
 }
 
